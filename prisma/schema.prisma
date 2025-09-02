@@ -1,0 +1,249 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  username      String    @unique
+  password      String
+  sensayUserId  String?   @unique // Sensay API User ID
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Relasi ke chat sessions
+  chatSessions  ChatSession[]
+  
+  // E-commerce relations
+  carts         Cart[]
+  orders        Order[]
+  
+  @@map("users")
+}
+
+model ChatSession {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Sensay conversation tracking
+  conversationId String?  @unique // Sensay conversation UUID
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  
+  // Relasi ke messages
+  messages    ChatMessage[]
+  
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id            String      @id @default(cuid())
+  sessionId     String
+  session       ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  
+  role          String      // 'user' atau 'assistant'
+  content       String      @db.Text
+  timestamp     DateTime    @default(now())
+  
+  // Sensay response metadata
+  sensayResponse Json?     // Store full Sensay response if needed
+  
+  // Product data for preserving product links in chat history
+  products      Json?      // Store detected products data
+  shopifyProducts Json?    // Store Shopify products data
+  
+  @@map("chat_messages")
+}
+
+model ApiUsage {
+  id            String    @id @default(cuid())
+  userId        String
+  endpoint      String    // 'chat', 'create_user', etc.
+  requestData   Json?
+  responseData  Json?
+  success       Boolean   @default(true)
+  errorMessage  String?
+  timestamp     DateTime  @default(now())
+  
+  @@map("api_usage")
+}
+
+// E-commerce tables for complete shopping flow in chatbot
+
+model Cart {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Cart metadata
+  sessionId     String?     // Link to chat session if created from chat
+  totalAmount   Decimal     @default(0) @db.Decimal(10, 2)
+  totalItems    Int         @default(0)
+  
+  // Cart status
+  status        CartStatus  @default(ACTIVE)
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  // Relations
+  items         CartItem[]
+  orders        Order[]
+  
+  @@map("carts")
+}
+
+model CartItem {
+  id            String      @id @default(cuid())
+  cartId        String
+  cart          Cart        @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  
+  // Product information
+  productId     String      // Shopify product ID
+  variantId     String      // Shopify variant ID
+  productTitle  String
+  variantTitle  String?
+  productHandle String
+  productImage  String?
+  
+  // Pricing
+  price         Decimal     @db.Decimal(10, 2)
+  currency      String      @default("USD")
+  
+  // Quantity
+  quantity      Int         @default(1)
+  
+  // Metadata
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  @@map("cart_items")
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  cartId        String?
+  cart          Cart?       @relation(fields: [cartId], references: [id])
+  
+  // Order identification
+  orderNumber   String      @unique // Human-readable order number
+  shopifyOrderId String?    // Shopify order ID if created
+  
+  // Order details
+  status        OrderStatus @default(PENDING)
+  totalAmount   Decimal     @db.Decimal(10, 2)
+  currency      String      @default("USD")
+  
+  // Customer information
+  customerName  String?
+  customerEmail String?
+  customerPhone String?
+  
+  // Shipping information
+  shippingAddress Json?     // Store shipping address as JSON
+  
+  // Order metadata
+  notes         String?     @db.Text
+  source        String      @default("chatbot") // How the order was created
+  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  // Relations
+  items         OrderItem[]
+  payments      Payment[]
+  
+  @@map("orders")
+}
+
+model OrderItem {
+  id            String      @id @default(cuid())
+  orderId       String
+  order         Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  // Product information
+  productId     String      // Shopify product ID
+  variantId     String      // Shopify variant ID
+  productTitle  String
+  variantTitle  String?
+  productHandle String
+  productImage  String?
+  
+  // Pricing
+  price         Decimal     @db.Decimal(10, 2)
+  currency      String      @default("USD")
+  
+  // Quantity
+  quantity      Int         @default(1)
+  
+  @@map("order_items")
+}
+
+model Payment {
+  id            String      @id @default(cuid())
+  orderId       String
+  order         Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  // Payment identification
+  paymentId     String      @unique // External payment ID (e.g., from payment gateway)
+  
+  // Payment details
+  amount        Decimal     @db.Decimal(10, 2)
+  currency      String      @default("USD")
+  method        String      // 'credit_card', 'bank_transfer', 'e_wallet', etc.
+  
+  // Payment status
+  status        PaymentStatus @default(PENDING)
+  
+  // Payment metadata
+  gateway       String?     // Payment gateway used
+  transactionId String?     // Gateway transaction ID
+  reference     String?     // Payment reference number
+  
+  // Timestamps
+  paidAt        DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  
+  @@map("payments")
+}
+
+// Enums for better type safety
+enum CartStatus {
+  ACTIVE
+  ABANDONED
+  CONVERTED
+  EXPIRED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+}
