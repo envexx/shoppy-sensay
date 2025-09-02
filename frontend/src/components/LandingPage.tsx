@@ -149,7 +149,7 @@ const LandingPage = () => {
                     <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
                     <div className="w-3 h-3 bg-[#71B836] rounded-full"></div>
                   </div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">shoppyui.com</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400 font-mono">shoppyS.com</div>
                   <div></div>
                 </div>
                 
