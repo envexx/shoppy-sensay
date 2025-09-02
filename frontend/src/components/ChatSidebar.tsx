@@ -152,7 +152,7 @@ const ChatSidebar = ({ selectedChat, onChatSelect, user, onLogout, refreshTrigge
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
             <img 
-              src="/ShoppyS logo .png" 
+              src="./ShoppyS logo .png" 
               alt="ShoppyS Logo" 
               className="w-8 h-8 rounded-lg shadow-lg"
             />
@@ -317,7 +317,7 @@ const ChatSidebar = ({ selectedChat, onChatSelect, user, onLogout, refreshTrigge
         <div className="p-4 border-t border-gray-200/50 flex-shrink-0">
           <div className="flex items-center space-x-3 bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm rounded-lg p-3">
             <img 
-              src="/ShoppyS logo .png" 
+              src="./ShoppyS logo .png" 
               alt="ShoppyS Logo" 
               className="w-10 h-10 rounded-lg shadow-lg"
             />
