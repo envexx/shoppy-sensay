@@ -7,7 +7,7 @@ import { prisma } from './database';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 
 // Middleware
 app.use(cors({
@@ -101,7 +101,7 @@ async function startServer() {
   try {
     await connectDatabase();
     
-    app.listen(PORT, '0.0.0.0', () => {
+    app.listen(Number(PORT), '0.0.0.0', () => {
       console.log(`🚀 Shoppy Sensay API Server running on port ${PORT}`);
       console.log(`📱 API Base URL: http://localhost:${PORT}/api`);
       console.log(`🔍 Health Check: http://localhost:${PORT}/api/health`);
