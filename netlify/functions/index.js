@@ -81,17 +81,9 @@ exports.handler = async (event, context) => {
     console.error('Database connection failed:', error);
   }
 
-  // Handle the request
-  return new Promise((resolve) => {
-    app(event, context, (err, result) => {
-      if (err) {
-        resolve({
-          statusCode: 500,
-          body: JSON.stringify({ error: 'Internal server error' })
-        });
-      } else {
-        resolve(result);
-      }
-    });
-  });
+  // Handle the request using serverless-http
+  const serverless = require('serverless-http');
+  const handler = serverless(app);
+  
+  return handler(event, context);
 };
