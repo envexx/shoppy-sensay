@@ -1,4 +1,14 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+// Dynamic API base URL with fallback
+const getApiBaseUrl = () => {
+  // Check if we're in development (localhost)
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:3001/api';
+  }
+  // Fallback to production API when not on localhost
+  return 'https://shoppy-sensay.vercel.app/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 interface AuthResponse {
   success: boolean;
