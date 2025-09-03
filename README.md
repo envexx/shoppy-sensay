@@ -16,7 +16,7 @@
   <p>
     <strong>Live Demo:</strong> 
     <a href="https://shoppy-sensay.vercel.app">Frontend</a> | 
-    <a href="https://your-app-name.vercel.app/api/health">Backend API</a>
+    <a href="https://shoppys-backend.vercel.app/api/health">Backend API</a>
   </p>
 </div>
 
@@ -324,7 +324,7 @@ setup.bat
 
 ### Base URL
 - **Development**: `http://localhost:3001/api`
-- **Production**: `https://your-app-name.vercel.app/api`
+- **Production**: `https://shoppys-backend.vercel.app/api`
 
 ### Authentication Endpoints
 

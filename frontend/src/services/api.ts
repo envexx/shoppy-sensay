@@ -5,8 +5,7 @@ const getApiBaseUrl = () => {
     return 'http://localhost:3001/api';
   }
   // Use Vercel backend URL for production
-  // Replace 'your-app-name' with your actual Vercel app name
-  return 'https://your-app-name.vercel.app/api';
+  return 'https://shoppys-backend.vercel.app/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();

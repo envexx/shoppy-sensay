@@ -68,15 +68,15 @@ NODE_ENV=production
 
 ## Setup Deployment Terpisah
 
-### Backend (Netlify Functions):
-- **URL**: `https://your-app-name.netlify.app`
-- **Health Check**: `https://your-app-name.netlify.app/api/health`
+### Backend (Vercel Serverless):
+- **URL**: `https://shoppys-backend.vercel.app`
+- **Health Check**: `https://shoppys-backend.vercel.app/api/health`
 - **CORS**: Menerima request dari frontend domain
-- **Platform**: Netlify Functions (Serverless)
+- **Platform**: Vercel Serverless Functions
 
 ### Frontend (React App):
 - **URL**: `https://shoppy-sensay.vercel.app`
-- **API Base**: Menggunakan `https://your-app-name.netlify.app/api`
+- **API Base**: Menggunakan `https://shoppys-backend.vercel.app/api`
 
 ## Troubleshooting
 
