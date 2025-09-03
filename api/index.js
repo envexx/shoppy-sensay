@@ -53,6 +53,22 @@ app.get('/', (req, res) => {
         history: 'GET /api/chat/history',
         sessions: 'GET /api/chat/sessions',
         sensayHistory: 'GET /api/chat/sensay-history'
+      },
+      cart: {
+        get: 'GET /api/cart',
+        add: 'POST /api/cart/add',
+        updateItem: 'PUT /api/cart/item/:itemId',
+        removeItem: 'DELETE /api/cart/item/:itemId',
+        clear: 'DELETE /api/cart/clear'
+      },
+      orders: {
+        create: 'POST /api/order/create',
+        list: 'GET /api/orders',
+        get: 'GET /api/order/:orderId'
+      },
+      payments: {
+        create: 'POST /api/payment/create',
+        updateStatus: 'PUT /api/payment/:paymentId/status'
       }
     }
   });
