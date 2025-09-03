@@ -95,7 +95,10 @@ async function connectDatabase() {
     console.log(`📊 Total users in database: ${userCount}`);
   } catch (error) {
     console.error('❌ Database connection failed:', error);
-    process.exit(1);
+    // Don't exit in Vercel environment, just log the error
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
   }
 }
 
