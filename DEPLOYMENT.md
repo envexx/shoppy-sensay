@@ -69,13 +69,13 @@ NODE_ENV=production
 ## Setup Deployment Terpisah
 
 ### Backend (API Server):
-- **URL**: `https://shoppy-sensay-backend.vercel.app`
-- **Health Check**: `https://shoppy-sensay-backend.vercel.app/api/health`
+- **URL**: `http://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io`
+- **Health Check**: `http://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io/api/health`
 - **CORS**: Menerima request dari frontend domain
 
 ### Frontend (React App):
 - **URL**: `https://shoppy-sensay.vercel.app`
-- **API Base**: Menggunakan `https://shoppy-sensay-backend.vercel.app/api`
+- **API Base**: Menggunakan `http://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io/api`
 
 ## Troubleshooting
 
