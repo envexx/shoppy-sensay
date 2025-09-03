@@ -18,8 +18,9 @@ app.use(cors({
     'http://127.0.0.1:3000', 
     'http://127.0.0.1:3001',
     'http://127.0.0.1:5173',  // Vite dev server
-    'https://shoppy-sensay.vercel.app',  // Frontend Vercel URL
-    'https://shoppy-sensay-backend.vercel.app'  // Backend Vercel URL
+    // Coolify backend domain
+    'http://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io',
+    'https://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -100,18 +101,13 @@ async function startServer() {
   try {
     await connectDatabase();
     
-    // Only start server if not in Vercel environment
-    if (!process.env.VERCEL) {
-      app.listen(PORT, () => {
-        console.log(`🚀 Shoppy Sensay API Server running on port ${PORT}`);
-        console.log(`📱 API Base URL: http://localhost:${PORT}/api`);
-        console.log(`🔍 Health Check: http://localhost:${PORT}/api/health`);
-        console.log(`📚 API Documentation: http://localhost:${PORT}/`);
-        console.log('\n🛍️ Ready to serve Shoppy Sensay requests!');
-      });
-    } else {
-      console.log('🚀 Shoppy Sensay API Server ready for Vercel deployment');
-    }
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 Shoppy Sensay API Server running on port ${PORT}`);
+      console.log(`📱 API Base URL: http://localhost:${PORT}/api`);
+      console.log(`🔍 Health Check: http://localhost:${PORT}/api/health`);
+      console.log(`📚 API Documentation: http://localhost:${PORT}/`);
+      console.log('\n🛍️ Ready to serve Shoppy Sensay requests!');
+    });
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);
@@ -132,6 +128,3 @@ process.on('SIGTERM', async () => {
 });
 
 startServer();
-
-// Export for Vercel
-export default app;
