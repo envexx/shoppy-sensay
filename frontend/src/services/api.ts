@@ -4,8 +4,9 @@ const getApiBaseUrl = () => {
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return 'http://localhost:3001/api';
   }
-  // Use actual deployed backend URL for production
-  return 'http://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io/api';
+  // Use Netlify backend URL for production
+  // Replace 'your-app-name' with your actual Netlify app name
+  return 'https://joyful-malasada-4bf8ff.netlify.app/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();

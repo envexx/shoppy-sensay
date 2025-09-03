@@ -1,0 +1,14 @@
+{
+  "name": "sensay-netlify-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for Shoppy Sensay API",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "@prisma/client": "^5.22.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

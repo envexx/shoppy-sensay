@@ -68,14 +68,15 @@ NODE_ENV=production
 
 ## Setup Deployment Terpisah
 
-### Backend (API Server):
-- **URL**: `http://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io`
-- **Health Check**: `http://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io/api/health`
+### Backend (Netlify Functions):
+- **URL**: `https://your-app-name.netlify.app`
+- **Health Check**: `https://your-app-name.netlify.app/api/health`
 - **CORS**: Menerima request dari frontend domain
+- **Platform**: Netlify Functions (Serverless)
 
 ### Frontend (React App):
 - **URL**: `https://shoppy-sensay.vercel.app`
-- **API Base**: Menggunakan `http://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io/api`
+- **API Base**: Menggunakan `https://your-app-name.netlify.app/api`
 
 ## Troubleshooting
 
