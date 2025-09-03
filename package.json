@@ -4,7 +4,7 @@
   "description": "Sensay AI Shopping Assistant Integration",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/index.js",
     "dev": "nodemon src/server/index.ts",
     "server": "ts-node src/index.ts",
