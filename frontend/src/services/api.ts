@@ -4,9 +4,9 @@ const getApiBaseUrl = () => {
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return 'http://localhost:3001/api';
   }
-  // Use Netlify backend URL for production
-  // Replace 'your-app-name' with your actual Netlify app name
-  return 'https://joyful-malasada-4bf8ff.netlify.app/api';
+  // Use Vercel backend URL for production
+  // Replace 'your-app-name' with your actual Vercel app name
+  return 'https://your-app-name.vercel.app/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
