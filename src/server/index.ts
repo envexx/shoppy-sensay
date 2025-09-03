@@ -18,7 +18,8 @@ app.use(cors({
     'http://127.0.0.1:3000', 
     'http://127.0.0.1:3001',
     'http://127.0.0.1:5173',  // Vite dev server
-    'https://shoppy-sensay.vercel.app'  // Production Vercel URL
+    'https://shoppy-sensay.vercel.app',  // Frontend Vercel URL
+    'https://shoppy-sensay-backend.vercel.app'  // Backend Vercel URL
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

@@ -66,6 +66,17 @@ NODE_ENV=production
 - **Build Output**: File yang di-build adalah `dist/server/index.js`
 - **Vercel Config**: Mengarah ke `dist/server/index.js` sebagai entry point
 
+## Setup Deployment Terpisah
+
+### Backend (API Server):
+- **URL**: `https://shoppy-sensay-backend.vercel.app`
+- **Health Check**: `https://shoppy-sensay-backend.vercel.app/api/health`
+- **CORS**: Menerima request dari frontend domain
+
+### Frontend (React App):
+- **URL**: `https://shoppy-sensay.vercel.app`
+- **API Base**: Menggunakan `https://shoppy-sensay-backend.vercel.app/api`
+
 ## Troubleshooting
 
 ### Error yang Sudah Diperbaiki:

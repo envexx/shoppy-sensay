@@ -4,8 +4,8 @@ const getApiBaseUrl = () => {
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
     return 'http://localhost:3001/api';
   }
-  // Fallback to production API when not on localhost
-  return 'https://shoppy-sensay.vercel.app/api';
+  // Use backend Vercel URL for production
+  return 'https://shoppy-sensay-backend.vercel.app/api';
 };
 
 const API_BASE_URL = getApiBaseUrl();
