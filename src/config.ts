@@ -1,17 +1,31 @@
 import dotenv from 'dotenv';
+import { environment } from '../environment.js';
 
 dotenv.config();
+
+// Use environment.js as fallback for missing env vars
+const getEnvVar = (key: string, fallback?: string): string => {
+  const envValue = process.env[key];
+  if (envValue) return envValue;
+  
+  const envJsValue = environment[key as keyof typeof environment];
+  if (envJsValue !== undefined) {
+    return String(envJsValue); // Convert to string
+  }
+  
+  return fallback || '';
+};
 
 /**
  * Konfigurasi untuk Sensay API
  */
 export const SENSAY_CONFIG = {
   basePath: 'https://api.sensay.io/v1',
-  organizationSecret: process.env.SENSAY_API_KEY || '',
-  organizationId: process.env.SENSAY_ORG_ID || '1a0d6122-b2f7-4724-82d8-543d5630e957',
+  organizationSecret: getEnvVar('SENSAY_API_KEY'),
+  organizationId: getEnvVar('SENSAY_ORG_ID', '1a0d6122-b2f7-4724-82d8-543d5630e957'),
   apiVersion: '2025-03-25',
   headers: {
-    'X-ORGANIZATION-SECRET': process.env.SENSAY_API_KEY || '',
+    'X-ORGANIZATION-SECRET': getEnvVar('SENSAY_API_KEY'),
     'X-API-Version': '2025-03-25',
     'Content-Type': 'application/json'
   }
@@ -22,10 +36,10 @@ export const SENSAY_CONFIG = {
  */
 export const SHOPIFY_CONFIG = {
   storeName: 'shoppysensay',
-  storefrontApiToken: process.env.SHOPIFY_STOREFRONT_TOKEN || '',
-  adminApiToken: process.env.SHOPIFY_ADMIN_TOKEN || '',
-  apiKey: process.env.SHOPIFY_API_KEY || '',
-  secretKey: process.env.SHOPIFY_SECRET_KEY || '',
+  storefrontApiToken: getEnvVar('SHOPIFY_STOREFRONT_TOKEN'),
+  adminApiToken: getEnvVar('SHOPIFY_ADMIN_TOKEN'),
+  apiKey: getEnvVar('SHOPIFY_API_KEY'),
+  secretKey: getEnvVar('SHOPIFY_SECRET_KEY'),
   apiVersion: '2024-07',
   endpoints: {
     storefront: `https://shoppysensay.myshopify.com/api/2024-07/graphql.json`,

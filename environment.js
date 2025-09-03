@@ -11,6 +11,11 @@ exports.environment = {
     // JWT Secret
     JWT_SECRET: "shoppy_sensay_jwt_secret_key_2024",
     // Server
-    PORT: 3001
+    PORT: 3001,
+    // Shopify
+    SHOPIFY_STOREFRONT_TOKEN: "your_shopify_storefront_token_here",
+    SHOPIFY_ADMIN_TOKEN: "your_shopify_admin_token_here",
+    SHOPIFY_API_KEY: "your_shopify_api_key_here",
+    SHOPIFY_SECRET_KEY: "your_shopify_secret_key_here"
 };
 //# sourceMappingURL=environment.js.map

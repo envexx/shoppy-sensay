@@ -1,29 +1,141 @@
-// Vercel entry point - redirects to the actual server
-const { createServer } = require('http');
-const { parse } = require('url');
-const next = require('next');
+// Vercel entry point
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
-// Import the actual server
-const app = require('./dist/server/index.js').default;
+// Load environment variables
+dotenv.config();
 
-// Create server
-const server = createServer((req, res) => {
-  const parsedUrl = parse(req.url, true);
-  const { pathname, query } = parsedUrl;
+// Import routes
+const routes = require('./dist/server/routes.js').default;
+const { prisma } = require('./dist/server/database.js');
 
-  // Handle API routes
-  if (pathname.startsWith('/api')) {
-    return app(req, res);
-  }
+const app = express();
+const PORT = process.env.PORT || 3001;
 
-  // Handle root route
-  if (pathname === '/') {
-    return app(req, res);
-  }
+// Middleware
+app.use(cors({
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:3001', 
+    'http://localhost:5173',  // Vite dev server
+    'http://127.0.0.1:3000', 
+    'http://127.0.0.1:3001',
+    'http://127.0.0.1:5173',  // Vite dev server
+    'https://shoppy-sensay.vercel.app',  // Frontend Vercel URL
+    'https://shoppy-sensay-backend.vercel.app'  // Backend Vercel URL
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
+}));
 
-  // Handle all other routes
-  return app(req, res);
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Logging middleware
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
 });
 
+// Routes
+app.use('/api', routes);
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    message: '🛍️ Shoppy Sensay API Server',
+    version: '1.0.0',
+    status: 'Running',
+    endpoints: {
+      health: '/api/health',
+      auth: {
+        register: 'POST /api/auth/register',
+        login: 'POST /api/auth/login',
+        me: 'GET /api/auth/me'
+      },
+      chat: {
+        send: 'POST /api/chat/send',
+        history: 'GET /api/chat/history'
+      },
+      analytics: 'GET /api/analytics'
+    },
+    documentation: 'https://api.sensay.io/docs'
+  });
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+  });
+});
+
+// 404 handler
+app.use('*', (req, res) => {
+  res.status(404).json({
+    error: 'Not found',
+    message: `Route ${req.method} ${req.originalUrl} not found`
+  });
+});
+
+// Database connection test
+async function connectDatabase() {
+  try {
+    await prisma.$connect();
+    console.log('✅ Database connected successfully');
+    
+    // Test query
+    const userCount = await prisma.user.count();
+    console.log(`📊 Total users in database: ${userCount}`);
+  } catch (error) {
+    console.error('❌ Database connection failed:', error);
+    process.exit(1);
+  }
+}
+
+// Start server
+async function startServer() {
+  try {
+    await connectDatabase();
+    
+    // Only start server if not in Vercel environment
+    if (!process.env.VERCEL) {
+      app.listen(PORT, () => {
+        console.log(`🚀 Shoppy Sensay API Server running on port ${PORT}`);
+        console.log(`📱 API Base URL: http://localhost:${PORT}/api`);
+        console.log(`🔍 Health Check: http://localhost:${PORT}/api/health`);
+        console.log(`📚 API Documentation: http://localhost:${PORT}/`);
+        console.log('\n🛍️ Ready to serve Shoppy Sensay requests!');
+      });
+    } else {
+      console.log('🚀 Shoppy Sensay API Server ready for Vercel deployment');
+    }
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('\n🛑 Shutting down server...');
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log('\n🛑 Shutting down server...');
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+startServer();
+
 // Export for Vercel
-module.exports = server;
+module.exports = app;
