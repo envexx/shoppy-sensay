@@ -724,7 +724,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   </p>
   <p>
     <a href="https://shoppy-sensay.vercel.app">Live Demo</a> •
-    <a href="https://github.com/your-username/sensay-shop/issues">Report Bug</a> •
-    <a href="https://github.com/your-username/sensay-shop/discussions">Request Feature</a>
+    <a href="https://github.com/envxx/sensay-shop/issues">Report Bug</a> •
+    <a href="https://github.com/envxx/sensay-shop/discussions">Request Feature</a>
   </p>
 </div>
