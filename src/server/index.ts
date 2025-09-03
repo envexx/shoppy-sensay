@@ -100,13 +100,18 @@ async function startServer() {
   try {
     await connectDatabase();
     
-    app.listen(PORT, () => {
-      console.log(`🚀 Shoppy Sensay API Server running on port ${PORT}`);
-      console.log(`📱 API Base URL: http://localhost:${PORT}/api`);
-      console.log(`🔍 Health Check: http://localhost:${PORT}/api/health`);
-      console.log(`📚 API Documentation: http://localhost:${PORT}/`);
-      console.log('\n🛍️ Ready to serve Shoppy Sensay requests!');
-    });
+    // Only start server if not in Vercel environment
+    if (!process.env.VERCEL) {
+      app.listen(PORT, () => {
+        console.log(`🚀 Shoppy Sensay API Server running on port ${PORT}`);
+        console.log(`📱 API Base URL: http://localhost:${PORT}/api`);
+        console.log(`🔍 Health Check: http://localhost:${PORT}/api/health`);
+        console.log(`📚 API Documentation: http://localhost:${PORT}/`);
+        console.log('\n🛍️ Ready to serve Shoppy Sensay requests!');
+      });
+    } else {
+      console.log('🚀 Shoppy Sensay API Server ready for Vercel deployment');
+    }
   } catch (error) {
     console.error('Failed to start server:', error);
     process.exit(1);
@@ -127,3 +132,6 @@ process.on('SIGTERM', async () => {
 });
 
 startServer();
+
+// Export for Vercel
+export default app;
