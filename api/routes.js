@@ -1,5 +1,8 @@
 const express = require('express');
+const { PrismaClient } = require('@prisma/client');
+
 const router = express.Router();
+const prisma = new PrismaClient();
 
 // Health check endpoint
 router.get('/health', (req, res) => {
@@ -166,5 +169,107 @@ router.get('/chat/history', async (req, res) => {
     });
   }
 });
+
+router.get('/chat/sessions', async (req, res) => {
+  try {
+    // Get user ID from token (simplified for now - in production should validate JWT)
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        error: 'No token provided'
+      });
+    }
+
+    // For now, we'll get sessions for all users since we don't have proper auth
+    // In production, you should validate the token and get the specific user ID
+    const sessions = await prisma.chatSession.findMany({
+      include: {
+        messages: {
+          orderBy: { timestamp: 'desc' },
+          take: 1,
+          select: {
+            content: true,
+            timestamp: true,
+            role: true
+          }
+        },
+        _count: {
+          select: {
+            messages: true
+          }
+        }
+      },
+      orderBy: { updatedAt: 'desc' },
+      take: 20
+    });
+
+    const formattedSessions = sessions.map(session => ({
+      id: session.id,
+      title: generateSessionTitle(session.messages[0]?.content || 'Chat Session'),
+      lastMessage: session.messages[0]?.content || 'No messages',
+      timestamp: session.updatedAt.toISOString(),
+      messageCount: session._count.messages
+    }));
+
+    res.json({
+      success: true,
+      data: formattedSessions
+    });
+  } catch (error) {
+    console.error('Chat sessions error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to get chat sessions'
+    });
+  }
+});
+
+router.get('/chat/sensay-history', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        error: 'No token provided'
+      });
+    }
+
+    // TODO: Implement actual Sensay chat history logic
+    // This would require integrating with Sensay API
+    // For now, return mock data structure
+    res.json({
+      success: true,
+      type: 'chat_history',
+      items: [
+        {
+          id: 1,
+          content: 'Hello! How can I help you with your shopping today?',
+          role: 'assistant',
+          created_at: new Date().toISOString(),
+          is_private: false,
+          source: 'sensay',
+          user_uuid: 'mock-user-uuid'
+        }
+      ]
+    });
+  } catch (error) {
+    console.error('Sensay chat history error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to get Sensay chat history'
+    });
+  }
+});
+
+// Helper function to generate session title
+function generateSessionTitle(firstMessage) {
+  if (firstMessage.length > 30) {
+    return firstMessage.substring(0, 30) + '...';
+  }
+  return firstMessage;
+}
 
 module.exports = router;

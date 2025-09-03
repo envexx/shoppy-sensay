@@ -50,7 +50,9 @@ app.get('/', (req, res) => {
       },
       chat: {
         send: 'POST /api/chat/send',
-        history: 'GET /api/chat/history'
+        history: 'GET /api/chat/history',
+        sessions: 'GET /api/chat/sessions',
+        sensayHistory: 'GET /api/chat/sensay-history'
       }
     }
   });
