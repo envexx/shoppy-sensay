@@ -68,7 +68,12 @@ NODE_ENV=production
 
 ## Troubleshooting
 
-Jika masih ada masalah:
+### Error yang Sudah Diperbaiki:
+- ✅ **"No Output Directory named 'public'"** - Fixed dengan mengarahkan ke `dist/server/index.js`
+- ✅ **"functions property cannot be used with builds"** - Fixed dengan menghapus `functions` property
+
+### Jika masih ada masalah:
 1. Pastikan semua environment variables sudah di-set
 2. Pastikan database URL valid
 3. Check Vercel build logs untuk error detail
+4. Pastikan entry point mengarah ke `dist/server/index.js`
