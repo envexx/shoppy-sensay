@@ -20,7 +20,10 @@ app.use(cors({
     'http://127.0.0.1:5173',  // Vite dev server
     // Coolify backend domain
     'http://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io',
-    'https://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io'
+    'https://zw00cs4kgssok048ssscwowk.31.97.67.141.sslip.io',
+    // Frontend domains
+    'https://shoppy-sensay.vercel.app',
+    'https://sensay-shop.vercel.app'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
